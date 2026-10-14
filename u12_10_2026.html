@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>For you 💙</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Caveat:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky-1:#eef6ff;
+    --sky-2:#d8eaff;
+    --sky-3:#bcd9fb;
+    --blue:#6aa9f0;
+    --blue-deep:#3d7bd1;
+    --ink:#2f4a7a;
+    --ink-soft:#6b84ad;
+    --paper:#fffdf8;
+    --butter:#ffd98a;
+    --blush:#ffc9d6;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:'Fredoka',sans-serif;
+    color:var(--ink);
+    background:linear-gradient(180deg,var(--sky-1),var(--sky-2) 55%,var(--sky-3));
+    background-attachment:fixed;
+    overflow-x:hidden;
+    -webkit-tap-highlight-color:transparent;
+  }
+  h1,h2{margin:0;font-weight:600;line-height:1.15;}
+  p{margin:0;}
+  button{font-family:inherit;}
+  .hidden{display:none !important;}
+
+  /* ambient clouds */
+  .cloud{
+    position:fixed;
+    width:120px;height:40px;
+    background:#fff;
+    border-radius:40px;
+    opacity:.75;
+    z-index:0;
+    animation:drift linear infinite;
+    pointer-events:none;
+  }
+  .cloud::before,.cloud::after{
+    content:"";position:absolute;background:#fff;border-radius:50%;
+  }
+  .cloud::before{width:50px;height:50px;top:-24px;left:18px;}
+  .cloud::after{width:38px;height:38px;top:-16px;left:62px;}
+  @keyframes drift{
+    from{transform:translateX(-160px);}
+    to{transform:translateX(110vw);}
+  }
+
+  .screen{
+    position:relative;z-index:1;
+    min-height:100svh;
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    text-align:center;
+    padding:9vh 7vw;
+  }
+
+  /* ---------- Envelope landing ---------- */
+  #landing .tap-text{
+    margin-top:2.2rem;
+    font-size:1.05rem;color:var(--ink-soft);
+  }
+  #landing h1{font-size:clamp(1.8rem,8vw,2.4rem);margin-bottom:2.4rem;}
+  .envelope{
+    position:relative;width:240px;height:160px;
+    background:var(--blue);
+    border-radius:14px;
+    box-shadow:0 18px 30px -14px rgba(61,123,209,.55);
+    cursor:pointer;border:none;padding:0;
+    animation:bounce 2.2s ease-in-out infinite;
+  }
+  @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+  .envelope .flap{
+    position:absolute;top:0;left:0;width:100%;height:100%;
+    clip-path:polygon(0 0,100% 0,50% 58%);
+    background:var(--blue-deep);
+    border-radius:14px 14px 0 0;
+    transform-origin:top;
+    transition:transform .7s ease;
+    z-index:3;
+  }
+  .envelope .front{
+    position:absolute;inset:0;border-radius:14px;
+    background:
+      linear-gradient(135deg,transparent 49.5%,rgba(255,255,255,.18) 50%) left bottom/50% 55% no-repeat,
+      linear-gradient(225deg,transparent 49.5%,rgba(255,255,255,.18) 50%) right bottom/50% 55% no-repeat;
+    z-index:2;
+  }
+  .envelope .heart{
+    position:absolute;left:50%;top:50%;
+    transform:translate(-50%,-30%);
+    font-size:2rem;z-index:4;
+    transition:opacity .3s;
+  }
+  .envelope.open{animation:none;}
+  .envelope.open .flap{transform:rotateX(180deg);}
+  .envelope.open .heart{opacity:0;}
+
+  /* ---------- Hero ---------- */
+  .bear{width:190px;height:auto;margin-bottom:1.4rem;animation:sway 3.4s ease-in-out infinite;transform-origin:50% 90%;}
+  @keyframes sway{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(2deg);}}
+  .hero-title{font-size:clamp(2.2rem,11vw,3rem);margin-bottom:.8rem;color:var(--blue-deep);}
+  .hero-sub{max-width:300px;font-size:1.05rem;line-height:1.6;color:var(--ink);}
+  .scroll-cue{margin-top:2.6rem;color:var(--ink-soft);font-size:.9rem;display:flex;flex-direction:column;gap:.3rem;align-items:center;}
+  .scroll-cue .arrow{font-size:1.3rem;animation:bob 1.6s ease-in-out infinite;}
+  @keyframes bob{0%,100%{transform:translateY(0);}50%{transform:translateY(7px);}}
+
+  /* ---------- Letter ---------- */
+  .letter{
+    background:var(--paper);
+    width:100%;max-width:370px;
+    border-radius:22px;
+    padding:2rem 1.6rem 1.8rem;
+    box-shadow:0 20px 34px -18px rgba(61,123,209,.5);
+    position:relative;
+    text-align:left;
+    transform:rotate(-1deg);
+  }
+  .letter::before{
+    content:"";position:absolute;top:-14px;left:50%;transform:translateX(-50%) rotate(2deg);
+    width:90px;height:26px;background:rgba(255,217,138,.8);border-radius:4px;
+  }
+  .letter .to{font-family:'Caveat',cursive;font-size:1.9rem;color:var(--blue-deep);margin-bottom:.6rem;}
+  .letter .body p{
+    font-family:'Caveat',cursive;font-size:1.5rem;line-height:1.35;color:var(--ink);margin-bottom:.8rem;
+  }
+  .letter .sign{
+    font-family:'Caveat',cursive;font-size:1.7rem;color:var(--blue-deep);text-align:right;margin-top:1.2rem;
+  }
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .7s ease,transform .7s ease;}
+  .reveal.show{opacity:1;transform:none;}
+
+  /* ---------- Ask ---------- */
+  .ask-title{font-size:clamp(1.9rem,9vw,2.5rem);margin-bottom:.8rem;color:var(--blue-deep);}
+  .ask-sub{max-width:300px;line-height:1.6;margin-bottom:2rem;}
+  .btn-row{display:flex;flex-direction:column;gap:.9rem;width:100%;max-width:280px;}
+  .btn{
+    border:none;border-radius:999px;padding:1.05rem 1.4rem;font-size:1.1rem;font-weight:600;cursor:pointer;
+    transition:transform .15s ease;
+  }
+  .btn:active{transform:scale(.96);}
+  .btn.yes{background:linear-gradient(160deg,var(--blue),var(--blue-deep));color:#fff;box-shadow:0 12px 22px -10px rgba(61,123,209,.7);}
+  .btn.time{background:#fff;color:var(--blue-deep);box-shadow:0 8px 18px -12px rgba(61,123,209,.5);}
+  .reply{
+    margin-top:1.8rem;max-width:300px;line-height:1.6;font-size:1.05rem;
+    opacity:0;transition:opacity .6s ease;min-height:3rem;
+  }
+  .reply.show{opacity:1;}
+
+  /* ---------- Top bar ---------- */
+  #topbar{position:fixed;top:0;right:0;padding:.9rem 1.1rem;z-index:50;}
+  #topbar button{
+    border:none;background:rgba(255,255,255,.8);backdrop-filter:blur(6px);
+    padding:.5rem .8rem;border-radius:20px;font-size:1rem;cursor:pointer;
+    box-shadow:0 4px 12px rgba(61,123,209,.25);
+  }
+
+  .float-heart{
+    position:fixed;bottom:-30px;z-index:60;pointer-events:none;font-size:1.6rem;
+    animation:rise 2.6s ease-out forwards;
+  }
+  @keyframes rise{
+    0%{transform:translateY(0) scale(.6);opacity:0;}
+    15%{opacity:1;}
+    100%{transform:translateY(-95vh) translateX(var(--dx,0)) scale(1.2);opacity:0;}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    .cloud,.envelope,.bear,.scroll-cue .arrow{animation:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="cloud" style="top:8%;animation-duration:46s;"></div>
+<div class="cloud" style="top:30%;animation-duration:62s;animation-delay:-20s;transform:scale(.8);"></div>
+<div class="cloud" style="top:62%;animation-duration:54s;animation-delay:-35s;transform:scale(1.1);"></div>
+
+<audio id="bgSong" src="song.mp3" loop preload="auto" playsinline></audio>
+<div id="topbar" class="hidden"><button id="muteBtn">🔊</button></div>
+
+<!-- ============ Landing: envelope ============ -->
+<section id="landing" class="screen">
+  <h1 id="landingTitle"></h1>
+  <button class="envelope" id="envelope" aria-label="Open the envelope">
+    <div class="flap"></div>
+    <div class="front"></div>
+    <div class="heart">💙</div>
+  </button>
+  <p class="tap-text">Please bukak ni Dalingg</p>
+</section>
+
+<!-- ============ Main ============ -->
+<div id="stage" class="hidden">
+
+  <section class="screen">
+    <svg class="bear" viewBox="0 0 200 220" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="52" cy="48" r="26" fill="#a9c9f5"/><circle cx="52" cy="48" r="13" fill="#d9e8fc"/>
+      <circle cx="148" cy="48" r="26" fill="#a9c9f5"/><circle cx="148" cy="48" r="13" fill="#d9e8fc"/>
+      <ellipse cx="100" cy="165" rx="52" ry="48" fill="#a9c9f5"/>
+      <ellipse cx="100" cy="172" rx="32" ry="30" fill="#d9e8fc"/>
+      <circle cx="100" cy="95" r="58" fill="#b9d4f8"/>
+      <ellipse cx="100" cy="112" rx="24" ry="18" fill="#e6f0fe"/>
+      <ellipse cx="100" cy="104" rx="7" ry="5" fill="#2f4a7a"/>
+      <circle cx="78" cy="86" r="6" fill="#2f4a7a"/><circle cx="80" cy="84" r="2" fill="#fff"/>
+      <circle cx="122" cy="86" r="6" fill="#2f4a7a"/><circle cx="124" cy="84" r="2" fill="#fff"/>
+      <path d="M72 70 Q78 65 86 69" stroke="#2f4a7a" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M128 70 Q122 65 114 69" stroke="#2f4a7a" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M92 122 Q100 117 108 122" stroke="#2f4a7a" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle cx="64" cy="108" r="8" fill="#ffc9d6" opacity=".8"/>
+      <circle cx="136" cy="108" r="8" fill="#ffc9d6" opacity=".8"/>
+      <path d="M142 150 L142 190" stroke="#7fb36b" stroke-width="4" stroke-linecap="round"/>
+      <g transform="translate(142 146)">
+        <circle cx="0" cy="-9" r="7" fill="#fff"/><circle cx="9" cy="-2" r="7" fill="#fff"/>
+        <circle cx="5" cy="8" r="7" fill="#fff"/><circle cx="-5" cy="8" r="7" fill="#fff"/>
+        <circle cx="-9" cy="-2" r="7" fill="#fff"/><circle cx="0" cy="0" r="6" fill="#ffd98a"/>
+      </g>
+    </svg>
+    <h1 class="hero-title" id="heroTitle"></h1>
+    <p class="hero-sub" id="heroSub"></p>
+    <div class="scroll-cue"><span>scroll down</span><span class="arrow">↓</span></div>
+  </section>
+
+  <section class="screen">
+    <div class="letter reveal">
+      <div class="to" id="letterTo"></div>
+      <div class="body" id="letterBody"></div>
+      <div class="sign" id="letterSign"></div>
+    </div>
+  </section>
+
+
+  <section class="screen">
+    <h2 class="ask-title" id="askTitle"></h2>
+    <p class="ask-sub" id="askSub"></p>
+    <div class="btn-row">
+      <button class="btn yes" id="yesBtn"></button>
+      <button class="btn time" id="timeBtn"></button>
+    </div>
+    <p class="reply" id="reply"></p>
+    <a class="btn time hidden" id="tellBtn" target="_blank" rel="noopener" style="text-decoration:none;margin-top:1.2rem;display:inline-block;"></a>
+  </section>
+
+</div>
+
+<script>
+/* ============================================================
+   EDIT ME — write this in your own words. Everything on the
+   page comes from here. Keep it honest and specific: say what
+   you did, own it, and say what you'll do differently.
+   ============================================================ */
+const CONFIG = {
+  herName: "Ilya Dalingku Sayang",           // EDIT: her name or what you call her
+  yourName: "sayang",              // EDIT: your name, shown at the bottom of the card
+
+  landingTitle: "I made something for you",
+  heroTitle: "I'm really really sorry and regret for what i did.",
+  heroSub: "I know my words are small next to how much I hurt you on that night. But please read this.",
+
+  letter: [
+    // EDIT: replace these paragraphs with your own message."
+    "Dalingg. Please know that i sangat menyesal and serba salah yang teramat sangat buat you rase macam ni. Im here to make an apologise to you on what i have done. I'm not asking you to forget what happened. I'm asking for a chance to show you, with actions and not just words, that I can do better.",
+    "I dah terlalu banyak sakitkan hati youu and dah bernanah telinga you dengar i mintak maaf but i have to say sorry jugak and perbaiki silap i yang i dah buat. I sangatt sangatt kecewa dengan diri i, sangat sangat membebankan youu and i buat mende ni untuk pujuk youu. I know i have hurt you, menambah stress you and made you sad, but please give me a chance to make it right.",
+    "That night i sangat benci diri i, i fikir kenapa i ni bodoh sangat, slow, blur tak habis habis nak sakitkan hati youu. I will do my best to be a better person for you, for us. I dont want to lose you dalingg, this time i will never let you down again.",
+    "for your information, i tak pernah malu langsung bile i ade dengan youu dalingg. Dont ever think like thatt."
+  ],
+
+
+  askTitle: "Can we try again?",
+  askSub: "Whatever you decide, I'll respect it. Thank you for reading this letter.",
+  yesLabel: "Yess",
+  timeLabel: "I need more time",
+  // EDIT: your WhatsApp number with country code, digits only (e.g. 60123456789).
+  // Leave "" to hide the "tell him" button.
+  whatsapp: "60198522876",
+  tellLabel: "Send him my answer",
+  yesText: "Yes, let's try again",
+  timeText: "I need a bit more time, please be patient with me.",
+  yesReply: "Thank you Dalinggg give me another chance. 💙",
+  timeReply: "Of course. Take all the time you need. I'll be here, and I won't rush you. I will always be there when you need me."
+};
+/* ============================================================ */
+
+const $ = id => document.getElementById(id);
+$('landingTitle').textContent = CONFIG.landingTitle;
+$('heroTitle').textContent = CONFIG.heroTitle;
+$('heroSub').textContent = CONFIG.heroSub;
+$('letterTo').textContent = 'Dear ' + CONFIG.herName + ',';
+$('letterSign').textContent = 'Always yours, ' + CONFIG.yourName + ' 💙';
+$('askTitle').textContent = CONFIG.askTitle;
+$('askSub').textContent = CONFIG.askSub;
+$('yesBtn').textContent = CONFIG.yesLabel;
+$('timeBtn').textContent = CONFIG.timeLabel;
+
+CONFIG.letter.forEach(t=>{ const p=document.createElement('p'); p.textContent=t; $('letterBody').appendChild(p); });
+
+// music
+const song = $('bgSong'); song.volume = .55;
+function startSong(){ const p=song.play(); if(p&&p.catch) p.catch(()=>{}); }
+$('muteBtn').addEventListener('click',()=>{
+  song.muted=!song.muted;
+  $('muteBtn').textContent = song.muted ? '🔇' : '🔊';
+  if(!song.muted && song.paused) startSong();
+});
+
+// open envelope
+$('envelope').addEventListener('click',()=>{
+  const env=$('envelope');
+  if(env.classList.contains('open')) return;
+  env.classList.add('open');
+  startSong();
+  setTimeout(()=>{
+    $('landing').classList.add('hidden');
+    $('stage').classList.remove('hidden');
+    $('topbar').classList.remove('hidden');
+    window.scrollTo(0,0);
+    observe();
+  },900);
+});
+
+function observe(){
+  const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); }),{threshold:.25});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+}
+
+function hearts(n){
+  for(let i=0;i<n;i++){
+    const h=document.createElement('div');
+    h.className='float-heart';
+    h.textContent=['💙','🩵','🤍','✨'][i%4];
+    h.style.left=(Math.random()*90+3)+'%';
+    h.style.setProperty('--dx',(Math.random()*80-40)+'px');
+    h.style.animationDelay=(Math.random()*0.8)+'s';
+    document.body.appendChild(h);
+    setTimeout(()=>h.remove(),3600);
+  }
+}
+function showReply(t, msg){
+  const r=$('reply'); r.textContent=t; r.classList.add('show');
+  if(CONFIG.whatsapp){
+    const a=$('tellBtn');
+    a.textContent=CONFIG.tellLabel;
+    a.href='https://wa.me/'+CONFIG.whatsapp+'?text='+encodeURIComponent(msg);
+    a.classList.remove('hidden');
+  }
+}
+$('yesBtn').addEventListener('click',()=>{ showReply(CONFIG.yesReply, CONFIG.yesText); hearts(24); });
+$('timeBtn').addEventListener('click',()=>{ showReply(CONFIG.timeReply, CONFIG.timeText); });
+</script>
+</body>
+</html>
